@@ -20,11 +20,28 @@ function authJwt() {
 async function isRevoked(req,jwt){
   const payload = jwt.payload;
   //TODO:
-  if(payload.role==="Admin" || payload.role==="entrprise"){
-return false; 
+  if(payload.role==="Admin"){
+return false;  
+  }
+  if(payload.role==="entreprise"){
+if (req.method ==="POST" && req.path ==="/api/v1/products"){
+  return false;
+} 
+return true;
+  }
+  if(payload.role==="client"){
+    if(
+      req.method === "GET" && req.path === "/api/v1/products"||
+      req.method === "GET" && req.path === "/api/v1/categories"||
+      req.method === "GET" && req.path === "/api/v1/orders"
+
+    ){
+      return false;
+    }
+    return true;
+
   }
 return true;
-
 }
 
 module.exports = authJwt;
