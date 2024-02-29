@@ -31,8 +31,8 @@ return true;
   }
   if(payload.role==="client"){
     if(
-      req.method === "GET" && req.path === "/api/v1/products"||
-      req.method === "GET" && req.path === "/api/v1/categories"||
+      req.method === "POST" && req.path === "/api/v1/orders"||
+      req.method === "PUT" && req.path === "/api/v1/orders"||
       req.method === "GET" && req.path === "/api/v1/orders"
 
     ){
