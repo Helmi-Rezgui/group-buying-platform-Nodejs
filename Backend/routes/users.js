@@ -152,7 +152,7 @@ if (!user) {
   }
 } )
 
-  
+  //deleting user
 router.delete('/:id',  (req , res) => {
   User.findByIdAndDelete(req.params.id).then(user => { if (user){
     return res.status(200).json({success: true ,  messaage : 'user successfully removed'})
