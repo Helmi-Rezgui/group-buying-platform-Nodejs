@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
 
 router.get(`/`, async (req, res) => {
@@ -20,7 +21,7 @@ router.get("/:id", async (req, res) => {
   }
   res.send(user);
 });
-//creating new user
+// creating new user
 router.post("/", async (req, res) => {
   let user = new User({
     name: req.body.name,
@@ -34,19 +35,76 @@ router.post("/", async (req, res) => {
   if (!user) return res.status(400).send("user cannot be created");
   res.send(user);
 });
-router.post("/register", async (req, res) => {
-  let user = new User({
+const transporter = nodemailer.createTransport({
+  host: "sandbox.smtp.mailtrap.io",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+router.get("/register", async (req, res) => {
+  
+    let existingUser  = await User.findOne({ email: req.body.email });
+  if (existingUser ) {
+    return   res.status(400).json({
+      "success":false , "message":"Email already exists. Please use a different email."
+    });
+  }
+
+
+  
+    const user = new User({
     name: req.body.name,
     lastName: req.body.lastName,
     email: req.body.email,
     passwordHash: bcrypt.hashSync(req.body.password, 10), //the "10" is a salt of bcrypt
     phone: req.body.phone,
     role: req.body.role,
+    isVerified: false,
+  })
+  ;
+  // Save user to the database
+  await user.save();
+  try {
+
+    // Send verification email
+    const verificationToken = jwt.sign({ userId: user.id }, process.env.SECRET, { expiresIn: '1d' });
+    const verificationLink = `http://localhost:3000/api/v1/users/verify-email?token=${verificationToken}`;
+    // console.log(verificationLink);
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: "Email Verification",
+      html: `Click <a href="${verificationLink}">here</a> to verify your email.`,
+    });
+
+    res.status(201).json({"success":true,
+    "message":"User registered successfully. Please check your email for verification."
   });
-  user = await user.save();
-  if (!user) return res.status(400).send("user cannot be created");
-  res.send(user);
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({success:false,
+      "message":"User registration failed."});
+  }
 });
+ 
+router.post("/verify-email", async (req, res) => {
+  const token = req.query.token;
+  console.log(token);
+
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET);
+    const userId = decoded.userId;
+
+    // Mark user's email as verified
+    await User.findByIdAndUpdate(userId, { isVerified: true });
+
+    res.send("Email verified successfully.");
+  } catch (error) {
+    res.status(400).send("Invalid or expired token.");
+  }
+});
+
 router.put("/:id", async (req, res) => {
   let user = await User.findByIdAndUpdate(req.params.id,
   
@@ -77,6 +135,8 @@ const user = await User.findOne({email: req.body.email})
 const secret = process.env.secret
 if (!user) {
   return res.status(404).send('User not found')}
+// if (!user.isVerified) {
+//   return res.status(403).send('Email not verified. Please verify your email before logging in.')}
 
   if(user&& bcrypt.compareSync(req.body.password, user.passwordHash)){
     const token = jwt.sign({
@@ -88,7 +148,7 @@ if (!user) {
     {expiresIn:'1d'})
     res.status(200).send({user : user.email , token : token})
   }else{
-    res.status(400).send('wrong password')
+    res.status(400).send('Invalid email or password')
   }
 } )
 
