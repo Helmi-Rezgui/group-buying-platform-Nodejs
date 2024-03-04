@@ -14,8 +14,10 @@ const categoriesRouter = require('./routes/categories');
 const ordersRouter = require('./routes/orders');
 const usersRouter = require('./routes/users');
 const errorHandler= require('./helpers/error-handler')
+const feedbacksRouter= require('./routes/feedbacks')
 
 //middleware
+
 app.use(bodyParser.json());
 app.use(authJwt());
 app.use(errorHandler);
@@ -27,6 +29,7 @@ app.use(`${api}/products`, productsRouter);
 app.use(`${api}/categories`, categoriesRouter);
 app.use(`${api}/orders`, ordersRouter);
 app.use(`${api}/users`, usersRouter);
+app.use(`${api}/feedbacks`, feedbacksRouter);
 
 
 

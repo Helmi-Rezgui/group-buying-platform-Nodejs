@@ -7,7 +7,8 @@ const userSchema = mongoose.Schema({
   passwordHash: { type: String, required: true },
   phone: { type: Number, required: true },
   role: { type: String, default: "client" },
-  isVerified: { type: Boolean, default: false }
+  isVerified: { type: Boolean, default: false },
+
 });
 
 

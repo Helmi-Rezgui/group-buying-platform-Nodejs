@@ -13,10 +13,15 @@ router.get("/verify-email", async (req, res) => {
   try {
     const decoded = jwt.verify(token, process.env.SECRET);
     const userId = decoded.userId;
-
+ // Check if the token has been used before
+    const user = await User.findById(userId);
+    if (user.isVerified) {
+      return res.status(400).send("Email already verified.");
+    }
+    
     // Mark user's email as verified
     await User.findByIdAndUpdate(userId, { isVerified: true });
-  res.send("Email verified successfully.")
+  res.send("Email verified successfully. you can now close this page and log in ")
 
  
   } catch (error) {
@@ -138,8 +143,8 @@ const user = await User.findOne({email: req.body.email})
 const secret = process.env.secret
 if (!user) {
   return res.status(404).send('User not found')}
-// if (!user.isVerified) {
-//   return res.status(403).send('Email not verified. Please verify your email before logging in.')}
+if (!user.isVerified) {
+  return res.status(403).send('Email not verified. Please verify your email before logging in.')}
 
   if(user&& bcrypt.compareSync(req.body.password, user.passwordHash)){
     const token = jwt.sign({
