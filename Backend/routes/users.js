@@ -5,6 +5,25 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 
+router.get("/verify-email", async (req, res) => {
+  const token = req.query.token;
+  console.log(token);
+  
+
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET);
+    const userId = decoded.userId;
+
+    // Mark user's email as verified
+    await User.findByIdAndUpdate(userId, { isVerified: true });
+  res.send("Email verified successfully.")
+
+ 
+  } catch (error) {
+    
+      return res.status(400).send("Invalid or expired token.");
+  }
+});
 
 router.get(`/`, async (req, res) => {
   const userList = await User.find().select('-passwordHash');
@@ -42,7 +61,7 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
-router.get("/register", async (req, res) => {
+router.post("/register", async (req, res) => {
   
     let existingUser  = await User.findOne({ email: req.body.email });
   if (existingUser ) {
@@ -70,7 +89,7 @@ router.get("/register", async (req, res) => {
     // Send verification email
     const verificationToken = jwt.sign({ userId: user.id }, process.env.SECRET, { expiresIn: '1d' });
     const verificationLink = `http://localhost:3000/api/v1/users/verify-email?token=${verificationToken}`;
-    // console.log(verificationLink);
+    console.log(verificationLink);
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: user.email,
@@ -88,22 +107,6 @@ router.get("/register", async (req, res) => {
   }
 });
  
-router.post("/verify-email", async (req, res) => {
-  const token = req.query.token;
-  console.log(token);
-
-  try {
-    const decoded = jwt.verify(token, process.env.SECRET);
-    const userId = decoded.userId;
-
-    // Mark user's email as verified
-    await User.findByIdAndUpdate(userId, { isVerified: true });
-
-    res.send("Email verified successfully.");
-  } catch (error) {
-    res.status(400).send("Invalid or expired token.");
-  }
-});
 
 router.put("/:id", async (req, res) => {
   let user = await User.findByIdAndUpdate(req.params.id,
