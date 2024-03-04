@@ -11,7 +11,7 @@ router.get("/admin", async (req, res) => {
   }
 
   try {
-      // Retrieve all feedbacks
+      
       const feedbackList = await Feedback.find();
       
       if (!feedbackList || feedbackList.length === 0) {
