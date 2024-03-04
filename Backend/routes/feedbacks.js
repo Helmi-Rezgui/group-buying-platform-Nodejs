@@ -5,7 +5,7 @@ const router = express.Router();
 
 
 router.get("/admin", async (req, res) => {
-  // Check if the user is an admin
+  // Check if the user is an Admin
   if (req.auth.role !== 'Admin') {
       return res.status(403).json({ success: false, message: "You are not authorized to access this resource." });
   }
