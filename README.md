@@ -9,7 +9,8 @@ Welcome to the backend repository of my Group Buying Platform! This repository c
 
 **MongoDB**: A NoSQL database program that uses JSON-like documents with schema.
 
-**Getting Started**
+**Getting Started**:
+
 To get started with the backend of our group buying platform, follow these steps:
 
 ● Clone the Repository: Clone this repository to your local machine using the following command:
