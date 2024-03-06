@@ -1,7 +1,8 @@
 # group-buying-platform-Nodejs
 Welcome to the backend repository of my Group Buying Platform! This repository contains the Node.js backend code built with Express.js and MongoDB for our group buying platform.
 
-Technologies Used
+**Technologies Used**
+
 **Node.js**: A JavaScript runtime built on Chrome's V8 JavaScript engine, used for building scalable server-side applications.
 **Express.js**: A minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
 **MongoDB**: A NoSQL database program that uses JSON-like documents with schema.
