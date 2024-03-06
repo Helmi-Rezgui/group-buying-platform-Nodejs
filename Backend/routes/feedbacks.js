@@ -15,7 +15,7 @@ router.get("/admin", async (req, res) => {
       const feedbackList = await Feedback.find();
       
       if (!feedbackList || feedbackList.length === 0) {
-          return res.status(404).json({ success: false, message: "No feedbacks found." });
+          return res.status(404).json({ success: false, message: "No feedbacks Found." });
       }
       
       return res.status(200).send(feedbackList);

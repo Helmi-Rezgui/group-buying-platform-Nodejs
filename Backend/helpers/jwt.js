@@ -20,7 +20,7 @@ function authJwt() {
 }
 async function isRevoked(req, jwt) {
   const payload = jwt.payload;
-  //TODO:
+  
   if (payload.role === "Admin") {
     if (
       req.path==="/api/v1/feedbacks/admin") {
@@ -34,7 +34,12 @@ async function isRevoked(req, jwt) {
   }
 
   if (payload.role === "entreprise") {
-    if (req.method === "POST" && req.path === "/api/v1/products") {
+    if (
+      (req.method === "POST" && req.path === "/api/v1/products")||
+      
+      {url: /\/api\/v1\/feedbacks(.*)/}
+
+      ) {
       return false;
     }
     return true;
