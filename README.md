@@ -15,9 +15,9 @@ To get started with the backend of our group buying platform, follow these steps
 
 ● Clone the Repository: Clone this repository to your local machine using the following command:
 
-*bash
+* bash
 
-*Copy code
+* Copy code
 
 * git clone https://github.com/Helmi-Rezgui/group-buying-platform-Nodejs.git
   
