@@ -249,7 +249,7 @@ router.post("/reset-password", async (req, res) => {
     user.passwordHash = bcrypt.hashSync(newPassword, 10);
     await user.save();
 
-    res.status(200).json({ success: true, message: "Password reset successful" });
+    res.status(200).json({ success: true, message: "Password reseted successfully" });
   } catch (error) {
     console.error(error);
     res.status(400).json({ success: false, message: "Invalid or expired token." });
