@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "nodemailer": "^6.9.11"
+    "nodemailer": "^6.9.11",
+    "swagger-ui-express": "^5.0.0"
   }
 }

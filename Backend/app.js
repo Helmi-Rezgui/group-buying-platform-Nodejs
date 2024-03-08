@@ -8,6 +8,10 @@ const authJwt = require('./helpers/jwt');
 
 const api= process.env.API_URL;
 
+// swagger
+// const swaggerjsdoc= require('swagger-jsdoc');
+// const swaggerui= require('swagger-ui-express');
+
 //Routes
 const productsRouter = require('./routes/products');
 const categoriesRouter = require('./routes/categories');
@@ -16,8 +20,9 @@ const usersRouter = require('./routes/users');
 const errorHandler= require('./helpers/error-handler')
 const feedbacksRouter= require('./routes/feedbacks')
 
-//middleware
 
+
+//middleware
 app.use(bodyParser.json());
 app.use(authJwt());
 app.use(errorHandler);
@@ -30,6 +35,17 @@ app.use(`${api}/categories`, categoriesRouter);
 app.use(`${api}/orders`, ordersRouter);
 app.use(`${api}/users`, usersRouter);
 app.use(`${api}/feedbacks`, feedbacksRouter);
+// const options={
+//     definition:{ 
+//         openapi:"3.0.0",
+//         server:[
+//             {
+//                 url:"http://localhost:3000/api/v1/",
+//             }
+//         ]
+//       },
+//       apis:["./routes/*.js"]
+// }
 
 
 
@@ -45,6 +61,13 @@ mongoose.connect('mongodb://localhost:27017/eshop')
 
 
 
+// const spacs= swaggerjsdoc(options)
+// app.use(
+//     "/api-docs",
+//     swaggerui.serve,
+//     swaggerui.setup(spacs,
+//         {explorer: true, swaggerUrl: '/swagger/v1/swagger.json'}));
+    
 
 app.listen(3000, () => {
     console.log(api);
